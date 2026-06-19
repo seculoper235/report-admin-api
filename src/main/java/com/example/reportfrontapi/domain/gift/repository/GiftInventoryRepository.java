@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,12 +31,30 @@ public class GiftInventoryRepository extends BaseRepository<GiftInventory, Long>
                         .fetchFirst());
     }
 
+    // 해당 상품의 코드 재고 중 ISSUED(지급완료)를 제외한 목록(최신순).
+    public List<GiftInventory> findByProductIdExcludingIssued(Long productId) {
+        return selectFrom(inventory)
+                .where(inventory.productId.eq(productId),
+                        inventory.status.ne(GiftInventoryStatus.ISSUED))
+                .orderBy(inventory.giftInventoryId.desc())
+                .fetch();
+    }
+
     // 해당 상품의 미사용(AVAILABLE) 코드 수(재고 보유 여부 판단).
     public long countAvailable(Long productId) {
+        return countByStatus(productId, GiftInventoryStatus.AVAILABLE);
+    }
+
+    // 해당 상품의 처리중(RESERVED) 코드 수.
+    public long countReserved(Long productId) {
+        return countByStatus(productId, GiftInventoryStatus.RESERVED);
+    }
+
+    private long countByStatus(Long productId, GiftInventoryStatus status) {
         Long count = select(inventory.count())
                 .from(inventory)
                 .where(inventory.productId.eq(productId),
-                        inventory.status.eq(GiftInventoryStatus.AVAILABLE))
+                        inventory.status.eq(status))
                 .fetchOne();
         return count != null ? count : 0L;
     }

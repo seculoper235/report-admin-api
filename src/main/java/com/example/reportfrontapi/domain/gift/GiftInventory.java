@@ -56,4 +56,9 @@ public class GiftInventory extends BaseEntity {
         this.status = GiftInventoryStatus.ISSUED;
         this.redemptionOrderId = redemptionOrderId;
     }
+
+    // 유효기간 변경(운영자 수정).
+    public void changeValidUntil(LocalDate validUntil) {
+        this.validUntil = validUntil;
+    }
 }

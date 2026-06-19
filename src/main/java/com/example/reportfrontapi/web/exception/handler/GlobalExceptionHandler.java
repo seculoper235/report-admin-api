@@ -65,6 +65,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.of(ResponseCode.INSUFFICIENT_POINT, e.getMessage(), null));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalState(IllegalStateException e) {
+        log.error(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.of(ResponseCode.CONFLICT, e.getMessage(), null));
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleEntityNotFound(EntityNotFoundException e) {
         log.error(e.getMessage());

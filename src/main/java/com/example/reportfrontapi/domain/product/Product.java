@@ -31,6 +31,14 @@ public class Product extends BaseEntity {
     @Column(name = "active", nullable = false)
     private boolean active;  // 노출 여부
 
+    // 상품 정보 수정(운영자).
+    public void update(String name, String brand, String imageUrl, Integer pointCost) {
+        this.name = name;
+        this.brand = brand;
+        this.imageUrl = imageUrl;
+        this.pointCost = pointCost;
+    }
+
     public static Product of(String name, String brand, String imageUrl, Integer pointCost) {
         return Product.builder()
                 .name(name)
