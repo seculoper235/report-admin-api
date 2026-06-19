@@ -4,10 +4,13 @@ import com.example.reportfrontapi.common.response.ApiResponse;
 import com.example.reportfrontapi.domain.product.application.ProductService;
 import com.example.reportfrontapi.domain.product.application.dto.CodeLoadRequest;
 import com.example.reportfrontapi.domain.product.application.dto.ProductCreateRequest;
+import com.example.reportfrontapi.domain.product.application.dto.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 운영자 전용(ADMIN). SecurityConfig에서 /api/admin/** 은 ROLE_ADMIN 으로 제한.
@@ -18,6 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminProductController {
 
     private final ProductService productService;
+
+    // 등록된 전체 상품 목록 + 상품별 재고 수량.
+    @GetMapping
+    public ApiResponse<List<ProductResponse>> findAll() {
+        return ApiResponse.success(productService.findAll());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

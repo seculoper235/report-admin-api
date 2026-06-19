@@ -8,15 +8,15 @@ public record ProductResponse(
         String brand,
         String imageUrl,
         Integer pointCost,
-        boolean inStock        // 미사용 코드 재고 보유 여부
+        long stock        // 미사용(AVAILABLE) 코드 재고 수량
 ) {
-    public static ProductResponse from(Product product, boolean inStock) {
+    public static ProductResponse from(Product product, long stock) {
         return new ProductResponse(
                 product.getProductId(),
                 product.getName(),
                 product.getBrand(),
                 product.getImageUrl(),
                 product.getPointCost(),
-                inStock);
+                stock);
     }
 }

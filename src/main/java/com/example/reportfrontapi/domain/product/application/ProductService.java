@@ -22,10 +22,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final GiftInventoryRepository giftInventoryRepository;
 
-    // 노출 상품 목록 + 상품별 재고 보유 여부.
+    // 노출 상품 목록 + 상품별 미사용 코드 재고 수량.
     public List<ProductResponse> findAll() {
         return productRepository.findAllActive().stream()
-                .map(p -> ProductResponse.from(p, giftInventoryRepository.countAvailable(p.getProductId()) > 0))
+                .map(p -> ProductResponse.from(p, giftInventoryRepository.countAvailable(p.getProductId())))
                 .toList();
     }
 
