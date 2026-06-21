@@ -2,8 +2,8 @@ package com.example.reportfrontapi.domain.product.application;
 
 import com.example.reportfrontapi.domain.gift.model.GiftInventory;
 import com.example.reportfrontapi.domain.gift.repository.GiftInventoryRepository;
-import com.example.reportfrontapi.domain.product.controller.dto.CodeLoadCreateRequest;
-import com.example.reportfrontapi.domain.product.controller.dto.GiftUpdateCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftUpdateRequest;
 import com.example.reportfrontapi.domain.product.controller.dto.ProductCreateRequest;
 import com.example.reportfrontapi.domain.product.model.Product;
 import com.example.reportfrontapi.domain.product.repository.ProductRepository;
@@ -38,7 +38,7 @@ public class ProductCreateService {
 
     // 운영자: 기프티콘 수정. (유효기간만 변경 가능)
     @Transactional
-    public void updateCode(Long productId, Long giftInventoryId, GiftUpdateCreateRequest request) {
+    public void updateCode(Long productId, Long giftInventoryId, GiftUpdateRequest request) {
         GiftInventory inventory = giftInventoryRepository.findById(giftInventoryId)
                 .filter(gi -> gi.getProductId().equals(productId))
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -48,11 +48,11 @@ public class ProductCreateService {
 
     // 운영자: 코드 재고 적재. 적재된 코드 수를 반환.
     @Transactional
-    public int addCodes(Long productId, CodeLoadCreateRequest request) {
+    public int addCodes(Long productId, GiftCreateRequest request) {
         productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
 
-        for (CodeLoadCreateRequest.CodeItem item : request.codes()) {
+        for (GiftCreateRequest.CodeItem item : request.codes()) {
             giftInventoryRepository.save(
                     GiftInventory.of(productId, item.code(), item.barcodeImageUrl(), item.validUntil()));
         }

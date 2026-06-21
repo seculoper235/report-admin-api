@@ -4,9 +4,9 @@ import com.example.reportfrontapi.common.response.ApiResponse;
 import com.example.reportfrontapi.domain.product.application.ProductCreateService;
 import com.example.reportfrontapi.domain.product.application.ProductDeleteService;
 import com.example.reportfrontapi.domain.product.application.ProductFindService;
-import com.example.reportfrontapi.domain.product.controller.dto.CodeLoadCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftCreateRequest;
 import com.example.reportfrontapi.domain.product.controller.dto.GiftInventoryFindResponse;
-import com.example.reportfrontapi.domain.product.controller.dto.GiftUpdateCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftUpdateRequest;
 import com.example.reportfrontapi.domain.product.controller.dto.ProductCreateRequest;
 import com.example.reportfrontapi.domain.product.controller.dto.ProductFindResponse;
 import jakarta.validation.Valid;
@@ -63,14 +63,14 @@ public class AdminProductController {
     // 코드 재고 적재. 적재된 코드 수 반환.
     @PostMapping("/{id}/codes")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Integer> addCodes(@PathVariable Long id, @Valid @RequestBody CodeLoadCreateRequest request) {
+    public ApiResponse<Integer> addCodes(@PathVariable Long id, @Valid @RequestBody GiftCreateRequest request) {
         return ApiResponse.success(productCreateService.addCodes(id, request));
     }
 
     // 기프티콘 수정(유효기간만).
     @PatchMapping("/{id}/codes/{codeId}")
     public ApiResponse<Void> updateCode(@PathVariable Long id, @PathVariable Long codeId,
-                                        @RequestBody GiftUpdateCreateRequest request) {
+                                        @RequestBody GiftUpdateRequest request) {
         productCreateService.updateCode(id, codeId, request);
         return ApiResponse.success(null);
     }
