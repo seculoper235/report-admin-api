@@ -1,7 +1,7 @@
 package com.example.reportfrontapi.domain.product.application.dto;
 
-import com.example.reportfrontapi.domain.gift.GiftInventory;
-import com.example.reportfrontapi.domain.gift.GiftInventoryStatus;
+import com.example.reportfrontapi.domain.gift.model.GiftInventory;
+import com.example.reportfrontapi.domain.gift.model.GiftInventoryStatus;
 
 import java.time.LocalDate;
 
