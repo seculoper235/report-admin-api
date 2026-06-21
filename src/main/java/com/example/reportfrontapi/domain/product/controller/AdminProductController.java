@@ -1,12 +1,14 @@
 package com.example.reportfrontapi.domain.product.controller;
 
 import com.example.reportfrontapi.common.response.ApiResponse;
-import com.example.reportfrontapi.domain.product.application.ProductService;
-import com.example.reportfrontapi.domain.product.application.dto.CodeLoadRequest;
-import com.example.reportfrontapi.domain.product.application.dto.GiftInventoryResponse;
-import com.example.reportfrontapi.domain.product.application.dto.GiftUpdateRequest;
-import com.example.reportfrontapi.domain.product.application.dto.ProductCreateRequest;
-import com.example.reportfrontapi.domain.product.application.dto.ProductResponse;
+import com.example.reportfrontapi.domain.product.application.ProductCreateService;
+import com.example.reportfrontapi.domain.product.application.ProductDeleteService;
+import com.example.reportfrontapi.domain.product.application.ProductFindService;
+import com.example.reportfrontapi.domain.product.controller.dto.CodeLoadCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftInventoryFindResponse;
+import com.example.reportfrontapi.domain.product.controller.dto.GiftUpdateCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.ProductCreateRequest;
+import com.example.reportfrontapi.domain.product.controller.dto.ProductFindResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,52 +24,54 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminProductController {
 
-    private final ProductService productService;
+    private final ProductFindService productFindService;
+    private final ProductCreateService productCreateService;
+    private final ProductDeleteService productDeleteService;
 
     // 등록된 전체 상품 목록 + 상품별 재고 수량.
     @GetMapping
-    public ApiResponse<List<ProductResponse>> findAll() {
-        return ApiResponse.success(productService.findAll());
+    public ApiResponse<List<ProductFindResponse>> findAll() {
+        return ApiResponse.success(productFindService.findAll());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Long> create(@Valid @RequestBody ProductCreateRequest request) {
-        return ApiResponse.success(productService.create(request));
+        return ApiResponse.success(productCreateService.create(request));
     }
 
     // 상품 정보 수정(모든 필드).
     @PutMapping("/{id}")
     public ApiResponse<Void> update(@PathVariable Long id, @Valid @RequestBody ProductCreateRequest request) {
-        productService.update(id, request);
+        productCreateService.update(id, request);
         return ApiResponse.success(null);
     }
 
     // 상품 삭제. 재고(AVAILABLE)/처리중(RESERVED)이 모두 0일 때만 가능.
     @DeleteMapping("/{id}")
     public ApiResponse<Void> delete(@PathVariable Long id) {
-        productService.delete(id);
+        productDeleteService.delete(id);
         return ApiResponse.success(null);
     }
 
     // 상품의 기프티콘 재고 목록(상태/유효기간).
     @GetMapping("/{id}/codes")
-    public ApiResponse<List<GiftInventoryResponse>> findCodes(@PathVariable Long id) {
-        return ApiResponse.success(productService.findCodes(id));
+    public ApiResponse<List<GiftInventoryFindResponse>> findCodes(@PathVariable Long id) {
+        return ApiResponse.success(productFindService.findCodes(id));
     }
 
     // 코드 재고 적재. 적재된 코드 수 반환.
     @PostMapping("/{id}/codes")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Integer> addCodes(@PathVariable Long id, @Valid @RequestBody CodeLoadRequest request) {
-        return ApiResponse.success(productService.addCodes(id, request));
+    public ApiResponse<Integer> addCodes(@PathVariable Long id, @Valid @RequestBody CodeLoadCreateRequest request) {
+        return ApiResponse.success(productCreateService.addCodes(id, request));
     }
 
     // 기프티콘 수정(유효기간만).
     @PatchMapping("/{id}/codes/{codeId}")
     public ApiResponse<Void> updateCode(@PathVariable Long id, @PathVariable Long codeId,
-                                        @RequestBody GiftUpdateRequest request) {
-        productService.updateCode(id, codeId, request);
+                                        @RequestBody GiftUpdateCreateRequest request) {
+        productCreateService.updateCode(id, codeId, request);
         return ApiResponse.success(null);
     }
 }

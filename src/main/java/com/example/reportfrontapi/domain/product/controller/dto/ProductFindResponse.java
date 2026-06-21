@@ -1,8 +1,8 @@
-package com.example.reportfrontapi.domain.product.application.dto;
+package com.example.reportfrontapi.domain.product.controller.dto;
 
-import com.example.reportfrontapi.domain.product.Product;
+import com.example.reportfrontapi.domain.product.model.Product;
 
-public record ProductResponse(
+public record ProductFindResponse(
         Long productId,
         String name,
         String brand,
@@ -11,8 +11,8 @@ public record ProductResponse(
         long stock,        // 미사용(AVAILABLE) 코드 재고 수량
         long processing    // 처리중(RESERVED) 코드 수량
 ) {
-    public static ProductResponse from(Product product, long stock, long processing) {
-        return new ProductResponse(
+    public static ProductFindResponse from(Product product, long stock, long processing) {
+        return new ProductFindResponse(
                 product.getProductId(),
                 product.getName(),
                 product.getBrand(),
